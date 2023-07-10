@@ -1,4 +1,4 @@
-package com.fastcampus.getinlinenew.controller;
+package com.fastcampus.getinline.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
