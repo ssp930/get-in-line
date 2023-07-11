@@ -1,5 +1,10 @@
 package com.fastcampus.getinline.controller.api;
 
+import com.fastcampus.getinline.constant.ErrorCode;
+import com.fastcampus.getinline.dto.APIErrorResponse;
+import com.fastcampus.getinline.exception.GeneralException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,12 +15,14 @@ public class APIEventController {
 
     @GetMapping("events")
     public List<String> getEvents() {
-        return List.of("event1", "event2");
+        throw new GeneralException("ExceptionHandler test");
+//        return List.of("event1", "event2");
     }
 
     @PostMapping("events")
     public Boolean createEvent() {
-        return true;
+        throw new RuntimeException("ExceptionHandler test");
+//        return true;
     }
 
     @GetMapping("events/{eventId}")
@@ -33,6 +40,21 @@ public class APIEventController {
         return true;
     }
 
+    @ExceptionHandler
+    public ResponseEntity<APIErrorResponse> general(GeneralException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        HttpStatus status = errorCode.isClientSideError() ?
+                HttpStatus.BAD_REQUEST :
+                HttpStatus.INTERNAL_SERVER_ERROR;
+
+        return ResponseEntity
+                .status(status)
+                .body(APIErrorResponse.of(
+                        false, errorCode, errorCode.getMessage(e)
+                ));
+
+
+    }
 
 
 
